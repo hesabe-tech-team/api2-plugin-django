@@ -1,0 +1,118 @@
+{% load i18n %}
+{%  load option %}
+{% show_credential as credential %}
+<!-- <!DOCTYPE html> -->
+<html>
+<head>
+    <title>test</title>
+</head>
+<body>
+	
+	
+			<h5>Hesabe Payment gateway</h5>
+			<input type="text"  hidden name="variable1" value = {{variable1}}>
+			<input type="text" hidden  name="variable2" value = {{variable1}}>
+			<input type="text" hidden name="variable3" value = {{variable1}}>
+			<input type="text" hidden name="variable4" value = {{variable1}}>
+			<input type="text" hidden  name="variable5" value = {{variable1}}>
+			
+			<input type="number"  name="amount" placeholder="Enter amount" value = {{amount}}>
+			
+			<p class="error"></p>
+			
+			{% if credential.knet %}
+				<input type="button" value="PAY_KENT" id = "knet">
+			{% endif %}
+			{% if credential.mpgs %}
+				<input type="button" value="PAY_MPGS" id = "mpgs">
+			{% endif %}
+	
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+	function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+		    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		$.ajaxSetup({
+		    beforeSend: function(xhr, settings) {
+		        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		        }
+		    }
+    });
+	
+	
+  $("#knet").click(function(){
+	var amount=$("input[name='amount']").val()
+  	var parameter = {
+		"variable1":"{{variable1}}",
+		"variable2":"{{variable2}}",
+		"variable3":"{{variable3}}",
+		"variable4":"{{variable4}}",
+		"variable5":"{{variable5}}",
+		"amount":amount
+	}
+  		$.ajax({
+	      url: "/knet/", 
+	      type:"POST", 	
+	      data:{"parameter":JSON.stringify(parameter)},
+	      success: function(result){
+	      	$("body").html(result)
+	    	},
+	      error:function(err){
+	    		console.log(err)
+	    		$(".error").text(err.responseJSON.error)
+
+	    	}
+		});
+    
+	});
+   $("#mpgs").click(function(){
+   		var amount=$("input[name='amount']").val()
+  		var parameter = {
+		"variable1":"{{variable1}}",
+		"variable2":"{{variable2}}",
+		"variable3":"{{variable3}}",
+		"variable4":"{{variable4}}",
+		"variable5":"{{variable5}}",
+		"amount":amount
+		}
+  		$.ajax({
+	      url: "/mpgs/", 
+	      type:"POST", 	
+	      data:{"parameter":JSON.stringify(parameter)},
+	      success: function(result){
+	      	$("body").html(result)
+	    	},
+	      error:function(err){
+	    		$(".error").text(err.responseJSON.error)
+	    	}
+		});
+    
+  });
+});
+
+</script>
+</html>
+
+
+	           
