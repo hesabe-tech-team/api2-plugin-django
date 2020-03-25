@@ -1,8 +1,10 @@
-import httplib
+import __future__
+import http.client 
 from binascii import hexlify, unhexlify
 from Crypto.Cipher import AES
 from .models import *
-import urlparse
+from urllib.parse import urlparse
+import json
 
 def pad(data):
     length = 32 - (len(data) % 32)
@@ -33,14 +35,16 @@ def checkout(encencryptedText):
     credential_obj = Credential.objects.all()
     url=str(credential_obj[0].payment_url)
     accesscode = str(credential_obj[0].accesscode)
-    payment_url = urlparse.urlparse(url).netloc
-    conn = httplib.HTTPConnection('api.hesbstck.com')
-    payload = "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"data\"\r\n\r\n%s\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--" % encencryptedText
+    payment_url = urlparse(url).netloc
+    conn = http.client.HTTPConnection('api.hesbstck.com')
+    payload = json.dumps({"data":encencryptedText})
+  
     headers = {
-        'content-type': "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+        'content-type': "application/json; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
     }
     headers["accesscode"] = accesscode
-    conn.request("POST",urlparse.urlparse(url).path+'/checkout',payload, headers)
+    conn.request("POST",urlparse(url).path+'/checkout',payload, headers)
     res = conn.getresponse()
+   
     data = res.read()
     return data.decode("utf-8")
