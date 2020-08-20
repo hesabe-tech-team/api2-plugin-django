@@ -1,29 +1,26 @@
 # Project Title
 
-Hesabe payment gateway application.
+Django plugin for Hesabe payment gateway.
 
 ## Getting Started
 
-<<<<<<< HEAD
-These instructions will help you to integrate hesabe payment gateway on your local machine for development and testing purposes. 
- 
-
-=======
-These instructions will help you to integrate hesabe payment gateway on your local machine for development and testing purposes.
+These instructions will help you to integrate hesabe payment gateway with your Django project.
 
 ### Installing and configurations
 
+1. Clone the repository on your machine.
 ```
-git clone https://github.com/prachi1326/hesabe
+git clone https://github.com/hesabe-tech-team/api2-plugin-django
 
 ```
 
-Install all the dependenices by this command.
+2. All the dependenices are listed in the requirements.txt file. Install them using pip.
 
 ```
-pip install -r hesabe_app/requirements.txt
+pip install -r api2-plugin-django/requirements.txt
 ```
 
+3. Adding the plugin app to your Django project:
 Step 1) Add installed application to your project.
 
 Step 2) Add installed application to INSTALLED_APPS variable in settings.py
@@ -79,7 +76,7 @@ def payment(req):
 		"variable4" :  variable4 value,
 		"variable5" :  variable5 value,
 		"amount":amount value,
-		"order_id": Order id
+		"orderReferenceNumber": orderReferenceNumber
 
 	}
 	return render(req, 'hesabe_app/pay.html',payment_variables)

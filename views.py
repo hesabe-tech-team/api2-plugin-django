@@ -18,7 +18,7 @@ from django.conf import settings
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def hesabe_payment(req,amount,paymentType,args):
+def hesabe_payment(req, amount, paymentType, args):
 	error_dict = {
 	0 :	'Invalid Response',
 	422 :'Invalid Input',
@@ -45,7 +45,7 @@ def hesabe_payment(req,amount,paymentType,args):
 				variable3 = args.get("variable3",None)
 				variable4 = args.get("variable4",None)
 				variable5 = args.get("variable5",None)
-				orderReferenceNumber = args.get("order_id",None)
+				orderReferenceNumber = args.get("orderReferenceNumber", None)
 				data = {'merchantCode' : merchantCode,"orderReferenceNumber":orderReferenceNumber,"variable1":variable1,"variable2":variable2,"variable3":variable3,
 						"variable4":variable4,"variable5":variable5, "paymentType": paymentType,"version":2.0,'amount':amount,'responseUrl':success_url,'failureUrl':failure_url }
 				encryptedText = encrypt(str(json.dumps(data)), working_key , iv)
@@ -95,9 +95,9 @@ def payment(req):
 	current_time = now.strftime("%H:%M:%S")
 	hostname = socket.gethostname()    
 	IPAddr = socket.gethostbyname(hostname) 
-	# value of order_id should be Id of your order.    
+	# value of orderReferenceNumber should be unique Id for your order.    
 	payment_variables = {
-		"order_id"	: time.time(),
+		"orderReferenceNumber"	: time.time(),
 		"variable1" : current_time,
 		"variable2" : None,
 		"variable3" : None,
