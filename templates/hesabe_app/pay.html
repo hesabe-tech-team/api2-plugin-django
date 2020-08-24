@@ -15,14 +15,14 @@
 			<input type="text" hidden name="variable3" value = {{variable1}}>
 			<input type="text" hidden name="variable4" value = {{variable1}}>
 			<input type="text" hidden  name="variable5" value = {{variable1}}>
-			<input type="text" hidden  name="Orderid" value = {{order_id}}>
+			<input type="text" hidden  name="orderReferenceNumber" value = {{orderReferenceNumber}}>
 			
 			<input type="number"  name="amount" placeholder="Enter amount" value = {{amount}}>
 			
 			<p class="error"></p>
 			
 			{% if credential.knet %}
-				<input type="button" value="PAY_KENT" id = "knet">
+				<input type="button" value="PAY_KNET" id = "knet">
 			{% endif %}
 			{% if credential.mpgs %}
 				<input type="button" value="PAY_MPGS" id = "mpgs">
@@ -64,6 +64,7 @@ var csrftoken = getCookie('csrftoken');
 	
   $("#knet").click(function(){
 	var amount=$("input[name='amount']").val()
+	
 	if(amount<=0){
 		$(".error").text("Please enter valid amount")
 		return false
@@ -77,7 +78,7 @@ var csrftoken = getCookie('csrftoken');
 			return false
 		}
 	}
-	 
+	
 	var parameter = {
 		"variable1":"{{variable1}}",
 		"variable2":"{{variable2}}",
@@ -85,10 +86,10 @@ var csrftoken = getCookie('csrftoken');
 		"variable4":"{{variable4}}",
 		"variable5":"{{variable5}}",
 		"amount":amount,
-		"order_id":"{{order_id}}"
+		"orderReferenceNumber":"{{orderReferenceNumber}}"
 	}
   		$.ajax({
-	      url: "/knet/", 
+	      url: "{% url 'knet' %}", 
 	      type:"POST", 	
 	      data:{"parameter":JSON.stringify(parameter)},
 	      success: function(result){
@@ -124,10 +125,10 @@ var csrftoken = getCookie('csrftoken');
 		"variable4":"{{variable4}}",
 		"variable5":"{{variable5}}",
 		"amount":amount,
-		"order_id":"{{order_id}}"
+		"orderReferenceNumber":"{{orderReferenceNumber}}"
 		}
   		$.ajax({
-	      url: "/mpgs/", 
+			url: "{% url 'mpgs' %}", 
 	      type:"POST", 	
 	      data:{"parameter":JSON.stringify(parameter)},
 	      success: function(result){
